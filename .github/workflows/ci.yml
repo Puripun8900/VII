@@ -19,26 +19,21 @@ jobs:
     - name: Set up Node.js
       uses: actions/setup-node@v4
       with:
-        # It's best practice to pin to a specific LTS version for CI stability.
         node-version: '20' 
-        cache: 'npm'
+        # ❌ FIX: REMOVE this line to prevent the 'Dependencies lock file is not found' error.
+        # cache: 'npm'
 
     - name: Install Dependencies
-      # 🛠️ FIX: Using 'npm install' is more resilient than 'npm ci' in this context
-      # and solves the lock file conflict you were seeing.
+      # This will install everything without relying on a lock file cache.
       run: npm install
 
     - name: Run Unit Tests and Generate Coverage Report
-      # This step runs the 'jest --coverage' command defined in your package.json
-      # and generates the required 'coverage/lcov.info' file.
       run: npm test
       
     - name: Upload Coverage to Coveralls
       uses: coverallsapp/github-action@v2
       with:
-        # The GITHUB_TOKEN is securely and automatically provided by GitHub.
         github-token: ${{ secrets.GITHUB_TOKEN }}
-        # Explicitly point to the file Jest generated.
         path-to-lcov: ./coverage/lcov.info
         
     - name: Final Step - Success
