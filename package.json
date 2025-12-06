@@ -28,7 +28,7 @@
       "/.internal/"
     ],
     "testMatch": [
-      "**/test/**/*.cjs"
+      "**/*.cjs"
     ]
   }
 }
