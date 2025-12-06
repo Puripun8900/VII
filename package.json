@@ -28,7 +28,8 @@
       "/.internal/"
     ],
     "testMatch": [
-      "**/*.cjs"
+      "**/*.cjs",
+      "**/*.js"
     ]
   }
 }
