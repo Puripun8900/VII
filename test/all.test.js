@@ -104,52 +104,52 @@ jest.mock('../src/.internal/arrayLikeKeys.js', () => ({ __esModule: true, defaul
 
 
 // ===================================
-// 3. REQUIRE CALLS (Must be last to use the mocks)
+// 3. REQUIRE CALLS (CRITICAL FIX: using .default)
 // ===================================
 
-const add = require('../src/add.js');
-const at = require('../src/at.js');
-const camelCase = require('../src/camelCase.js');
-const capitalize = require('../src/capitalize.js');
-const castArray = require('../src/castArray.js');
-const ceil = require('../src/ceil.js');
-const chunk = require('../src/chunk.js');
-const clamp = require('../src/clamp.js');
-const compact = require('../src/compact.js');
-const countBy = require('../src/countBy.js');
-const defaultTo = require('../src/defaultTo.js');
-const defaultToAny = require('../src/defaultToAny.js');
-const difference = require('../src/difference.js');
-const divide = require('../src/divide.js');
-const drop = require('../src/drop.js');
-const endsWith = require('../src/endsWith.js');
-const eq = require('../src/eq.js');
-const every = require('../src/every.js');
-const filter = require('../src/filter.js');
-const get = require('../src/get.js');
-const isArguments = require('../src/isArguments.js');
-const isArrayLike = require('../src/isArrayLike.js');
-const isArrayLikeObject = require('../src/isArrayLikeObject.js');
-const isBoolean = require('../src/isBoolean.js');
-const isBuffer = require('../src/isBuffer.js');
-const isDate = require('../src/isDate.js');
-const isEmpty = require('../src/isEmpty.js');
-const isLength = require('../src/isLength.js');
-const isObject = require('../src/isObject.js');
-const isObjectLike = require('../src/isObjectLike.js');
-const isSymbol = require('../src/isSymbol.js');
-const isTypedArray = require('../src/isTypedArray.js');
-const keys = require('../src/keys.js');
-const map = require('../src/map.js');
-const memoize = require('../src/memoize.js');
-const reduce = require('../src/reduce.js');
-const slice = require('../src/slice.js');
-const toFinite = require('../src/toFinite.js');
-const toInteger = require('../src/toInteger.js');
-const toNumber = require('../src/toNumber.js');
-const toString = require('../src/toString.js');
-const upperFirst = require('../src/upperFirst.js');
-const words = require('../src/words.js');
+const add = require('../src/add.js').default;
+const at = require('../src/at.js').default;
+const camelCase = require('../src/camelCase.js').default;
+const capitalize = require('../src/capitalize.js').default;
+const castArray = require('../src/castArray.js').default;
+const ceil = require('../src/ceil.js').default;
+const chunk = require('../src/chunk.js').default;
+const clamp = require('../src/clamp.js').default;
+const compact = require('../src/compact.js').default;
+const countBy = require('../src/countBy.js').default;
+const defaultTo = require('../src/defaultTo.js').default;
+const defaultToAny = require('../src/defaultToAny.js').default;
+const difference = require('../src/difference.js').default;
+const divide = require('../src/divide.js').default;
+const drop = require('../src/drop.js').default;
+const endsWith = require('../src/endsWith.js').default;
+const eq = require('../src/eq.js').default;
+const every = require('../src/every.js').default;
+const filter = require('../src/filter.js').default;
+const get = require('../src/get.js').default;
+const isArguments = require('../src/isArguments.js').default;
+const isArrayLike = require('../src/isArrayLike.js').default;
+const isArrayLikeObject = require('../src/isArrayLikeObject.js').default;
+const isBoolean = require('../src/isBoolean.js').default;
+const isBuffer = require('../src/isBuffer.js').default;
+const isDate = require('../src/isDate.js').default;
+const isEmpty = require('../src/isEmpty.js').default;
+const isLength = require('../src/isLength.js').default;
+const isObject = require('../src/isObject.js').default;
+const isObjectLike = require('../src/isObjectLike.js').default;
+const isSymbol = require('../src/isSymbol.js').default;
+const isTypedArray = require('../src/isTypedArray.js').default;
+const keys = require('../src/keys.js').default;
+const map = require('../src/map.js').default;
+const memoize = require('../src/memoize.js').default;
+const reduce = require('../src/reduce.js').default;
+const slice = require('../src/slice.js').default;
+const toFinite = require('../src/toFinite.js').default;
+const toInteger = require('../src/toInteger.js').default;
+const toNumber = require('../src/toNumber.js').default;
+const toString = require('../src/toString.js').default;
+const upperFirst = require('../src/upperFirst.js').default;
+const words = require('../src/words.js').default;
 
 
 // ===================================
