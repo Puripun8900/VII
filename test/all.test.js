@@ -1,3 +1,112 @@
+// ===================================
+// 1. GLOBAL CONSTANTS USED IN MOCKS
+// ===================================
+
+const MAX_INTEGER = 1.7976931348623157e+308;
+const MAX_SAFE_INTEGER = 9007199254740991;
+
+// Declare all mock functions as constants BEFORE they are used in jest.mock()
+const mockToNumber = jest.fn(v => +v);
+const mockToFinite = jest.fn((value) => {
+    if (!value) return value === 0 ? value : 0;
+    value = mockToNumber(value);
+    if (value === Infinity || value === -Infinity) return (value < 0 ? -1 : 1) * MAX_INTEGER;
+    return value === value ? value : 0;
+});
+const mockToInteger = jest.fn((value) => {
+    const result = mockToFinite(value);
+    const remainder = result % 1;
+    return remainder ? result - remainder : result;
+});
+const mockIsObject = jest.fn((value) => {
+    const type = typeof value;
+    return value != null && (type === 'object' || type === 'function');
+});
+const mockIsObjectLike = jest.fn((value) => typeof value === 'object' && value !== null);
+const mockIsLength = jest.fn((value) => typeof value === 'number' && value > -1 && value % 1 == 0 && value <= MAX_SAFE_INTEGER);
+const mockIsArrayLike = jest.fn((value) => value != null && typeof value !== 'function' && mockIsLength(value.length));
+const mockBaseDifference = jest.fn((array, values) => array.filter(item => !values.includes(item))); 
+const mockSlice = jest.fn((array, start, end) => array.slice(start, end));
+const mockBaseAt = jest.fn(() => [3, 4]); // The problem line is now safe
+const mockBaseAssignValue = jest.fn((result, key, defaultValue) => { result[key] = defaultValue; });
+const mockUpperFirst = jest.fn((string) => string.charAt(0).toUpperCase() + string.slice(1));
+const mockGetTag = jest.fn((value) => {
+    if (value && typeof value === 'object') {
+        if (value.isArg) return '[object Arguments]';
+        if (value.isBool) return '[object Boolean]';
+        if (value.isDate) return '[object Date]';
+        if (value.isSym) return '[object Symbol]';
+        if (value.isTyped) return '[object Int8Array]';
+        if (value.isMap) return '[object Map]';
+        if (value.isSet) return '[object Set]';
+    }
+    return Object.prototype.toString.call(value);
+});
+
+
+// ===================================
+// 2. JEST MOCKS (Must use declared constants)
+// ===================================
+
+jest.mock('../src/toNumber.js', () => ({ __esModule: true, default: mockToNumber }));
+jest.mock('../src/toFinite.js', () => ({ __esModule: true, default: mockToFinite }));
+jest.mock('../src/toInteger.js', () => ({ __esModule: true, default: mockToInteger }));
+jest.mock('../src/.internal/createMathOperation.js', () => ({
+  __esModule: true,
+  default: (operator, defaultValue) => (augend, addend) =>
+    augend != null && addend != null ? operator(augend, addend) : defaultValue,
+}));
+jest.mock('../src/.internal/createRound.js', () => ({
+  __esModule: true,
+  default: (method) => (number) => (method === 'ceil' ? Math.ceil(number) : number),
+}));
+jest.mock('../src/.internal/baseDifference.js', () => ({ __esModule: true, default: mockBaseDifference }));
+jest.mock('../src/.internal/baseFlatten.js', () => ({ __esModule: true, default: jest.fn((array) => array.flat()) }));
+jest.mock('../src/.internal/baseAssignValue.js', () => ({ __esModule: true, default: mockBaseAssignValue }));
+jest.mock('../src/slice.js', () => ({ __esModule: true, default: mockSlice }));
+jest.mock('../src/.internal/baseAt.js', () => ({ __esModule: true, default: mockBaseAt }));
+jest.mock('../src/.internal/arrayReduce.js', () => ({ __esModule: true, default: jest.fn((array, iteratee, accumulator) => array.reduce(iteratee, accumulator)) }));
+jest.mock('../src/.internal/baseReduce.js', () => ({ 
+    __esModule: true, 
+    default: jest.fn((collection, iteratee, accumulator) => {
+        let result = accumulator;
+        for (const key in collection) {
+            if (Object.prototype.hasOwnProperty.call(collection, key)) {
+                result = iteratee(result, collection[key], key, collection);
+            }
+        }
+        return result;
+    })
+}));
+jest.mock('../src/.internal/baseEach.js', () => ({ __esModule: true, default: () => {} }));
+jest.mock('../src/upperFirst.js', () => ({ __esModule: true, default: mockUpperFirst }));
+jest.mock('../src/.internal/unicodeWords.js', () => ({ __esModule: true, default: jest.fn(() => ['unicode', 'words']) }));
+jest.mock('../src/.internal/createCaseFirst.js', () => ({ 
+    __esModule: true, 
+    default: jest.fn((method) => (string = '') => {
+        if (!string) return '';
+        const first = string.charAt(0);
+        const rest = string.slice(1);
+        return method === 'toUpperCase' ? first.toUpperCase() + rest : first.toLowerCase() + rest;
+    }) 
+}));
+jest.mock('../src/isObjectLike.js', () => ({ __esModule: true, default: mockIsObjectLike }));
+jest.mock('../src/isLength.js', () => ({ __esModule: true, default: mockIsLength }));
+jest.mock('../src/isArrayLike.js', () => ({ __esModule: true, default: mockIsArrayLike }));
+jest.mock('../src/isSymbol.js', () => ({ __esModule: true, default: jest.fn((value) => typeof value === 'symbol') }));
+jest.mock('../src/isObject.js', () => ({ __esModule: true, default: mockIsObject }));
+jest.mock('../src/.internal/getTag.js', () => ({ __esModule: true, default: mockGetTag }));
+jest.mock('../src/.internal/isPrototype.js', () => ({ __esModule: true, default: (value) => value && value.isPrototype }));
+jest.mock('../src/isBuffer.js', () => ({ __esModule: true, default: jest.fn(() => false) })); 
+jest.mock('../src/isTypedArray.js', () => ({ __esModule: true, default: jest.fn(() => false) })); 
+jest.mock('../src/.internal/baseGet.js', () => ({ __esModule: true, default: jest.fn((object, path) => object.value) }));
+jest.mock('../src/.internal/arrayLikeKeys.js', () => ({ __esModule: true, default: jest.fn((array) => Object.keys(array)) }));
+
+
+// ===================================
+// 3. REQUIRE CALLS (Must be last to use the mocks)
+// ===================================
+
 const add = require('../src/add.js');
 const at = require('../src/at.js');
 const camelCase = require('../src/camelCase.js');
@@ -42,119 +151,11 @@ const toString = require('../src/toString.js');
 const upperFirst = require('../src/upperFirst.js');
 const words = require('../src/words.js');
 
-// --- MOCK ALL DEPENDENCIES (.internal files and other src files) ---
 
-// MATH & ROUNDING Mocks
-const MAX_INTEGER = 1.7976931348623157e+308;
-const MAX_SAFE_INTEGER = 9007199254740991;
+// ===================================
+// 4. CONSOLIDATED TEST SUITE
+// ===================================
 
-// Mocks must also use CJS export syntax to avoid errors
-jest.mock('../src/.internal/createMathOperation.js', () => ({
-  __esModule: true,
-  default: (operator, defaultValue) => (augend, addend) =>
-    augend != null && addend != null ? operator(augend, addend) : defaultValue,
-}));
-jest.mock('../src/.internal/createRound.js', () => ({
-  __esModule: true,
-  default: (method) => (number) => (method === 'ceil' ? Math.ceil(number) : number),
-}));
-const mockToNumber = jest.fn(v => +v);
-jest.mock('../src/toNumber.js', () => ({ __esModule: true, default: mockToNumber }));
-const mockToFinite = jest.fn((value) => {
-    if (!value) return value === 0 ? value : 0;
-    value = mockToNumber(value);
-    if (value === Infinity || value === -Infinity) return (value < 0 ? -1 : 1) * MAX_INTEGER;
-    return value === value ? value : 0;
-});
-jest.mock('../src/toFinite.js', () => ({ __esModule: true, default: mockToFinite }));
-const mockToInteger = jest.fn((value) => {
-    const result = mockToFinite(value);
-    const remainder = result % 1;
-    return remainder ? result - remainder : result;
-});
-jest.mock('../src/toInteger.js', () => ({ __esModule: true, default: mockToInteger }));
-
-// ARRAY & COLLECTION Mocks
-const mockBaseDifference = jest.fn((array, values) => array.filter(item => !values.includes(item))); 
-jest.mock('../src/.internal/baseDifference.js', () => ({ __esModule: true, default: mockBaseDifference }));
-const mockBaseFlatten = jest.fn((array) => array.flat());
-jest.mock('../src/.internal/baseFlatten.js', () => ({ __esModule: true, default: mockBaseFlatten }));
-const mockBaseAssignValue = jest.fn((result, key, defaultValue) => { result[key] = defaultValue; });
-jest.mock('../src/.internal/baseAssignValue.js', () => ({ __esModule: true, default: mockBaseAssignValue }));
-const mockSlice = jest.fn((array, start, end) => array.slice(start, end));
-jest.mock('../src/slice.js', () => ({ __esModule: true, default: mockSlice }));
-const mockBaseAt = jest.fn(() => [3, 4]);
-jest.mock('../src/.internal/baseAt.js', () => ({ __esModule: true, default: mockBaseAt }));
-
-// REDUCE Mocks
-const mockArrayReduce = jest.fn((array, iteratee, accumulator) => array.reduce(iteratee, accumulator));
-const mockBaseReduce = jest.fn((collection, iteratee, accumulator) => {
-    let result = accumulator;
-    for (const key in collection) {
-        if (Object.prototype.hasOwnProperty.call(collection, key)) {
-            result = iteratee(result, collection[key], key, collection);
-        }
-    }
-    return result;
-});
-jest.mock('../src/.internal/arrayReduce.js', () => ({ __esModule: true, default: mockArrayReduce }));
-jest.mock('../src/.internal/baseReduce.js', () => ({ __esModule: true, default: mockBaseReduce }));
-jest.mock('../src/.internal/baseEach.js', () => ({ __esModule: true, default: () => {} }));
-
-// STRING Mocks
-const mockUpperFirst = jest.fn((string) => string.charAt(0).toUpperCase() + string.slice(1));
-jest.mock('../src/upperFirst.js', () => ({ __esModule: true, default: mockUpperFirst }));
-const mockUnicodeWords = jest.fn(() => ['unicode', 'words']);
-jest.mock('../src/.internal/unicodeWords.js', () => ({ __esModule: true, default: mockUnicodeWords }));
-const mockCreateCaseFirst = jest.fn((method) => (string = '') => {
-    if (!string) return '';
-    const first = string.charAt(0);
-    const rest = string.slice(1);
-    return method === 'toUpperCase' ? first.toUpperCase() + rest : first.toLowerCase() + rest;
-});
-jest.mock('../src/.internal/createCaseFirst.js', () => ({ __esModule: true, default: mockCreateCaseFirst }));
-
-// LANG / TYPE CHECKING Mocks
-const mockIsObjectLike = jest.fn((value) => typeof value === 'object' && value !== null);
-jest.mock('../src/isObjectLike.js', () => ({ __esModule: true, default: mockIsObjectLike }));
-const mockIsLength = jest.fn((value) => typeof value === 'number' && value > -1 && value % 1 == 0 && value <= MAX_SAFE_INTEGER);
-jest.mock('../src/isLength.js', () => ({ __esModule: true, default: mockIsLength }));
-const mockIsArrayLike = jest.fn((value) => value != null && typeof value !== 'function' && mockIsLength(value.length));
-jest.mock('../src/isArrayLike.js', () => ({ __esModule: true, default: mockIsArrayLike }));
-const mockIsSymbol = jest.fn((value) => typeof value === 'symbol');
-jest.mock('../src/isSymbol.js', () => ({ __esModule: true, default: mockIsSymbol }));
-const mockIsObject = jest.fn((value) => {
-    const type = typeof value;
-    return value != null && (type === 'object' || type === 'function');
-});
-jest.mock('../src/isObject.js', () => ({ __esModule: true, default: mockIsObject }));
-
-// Complex Mocks for getTag, baseGet, isBuffer, etc.
-const mockGetTag = jest.fn((value) => {
-    if (value && typeof value === 'object') {
-        if (value.isArg) return '[object Arguments]';
-        if (value.isBool) return '[object Boolean]';
-        if (value.isDate) return '[object Date]';
-        if (value.isSym) return '[object Symbol]';
-        if (value.isTyped) return '[object Int8Array]';
-        if (value.isMap) return '[object Map]';
-        if (value.isSet) return '[object Set]';
-    }
-    return Object.prototype.toString.call(value);
-});
-jest.mock('../src/.internal/getTag.js', () => ({ __esModule: true, default: mockGetTag }));
-jest.mock('../src/.internal/isPrototype.js', () => ({ __esModule: true, default: (value) => value && value.isPrototype }));
-const mockIsBuffer = jest.fn(() => false); 
-jest.mock('../src/isBuffer.js', () => ({ __esModule: true, default: mockIsBuffer }));
-const mockIsTypedArray = jest.fn(() => false); 
-jest.mock('../src/isTypedArray.js', () => ({ __esModule: true, default: mockIsTypedArray }));
-const mockBaseGet = jest.fn((object, path) => object.value);
-jest.mock('../src/.internal/baseGet.js', () => ({ __esModule: true, default: mockBaseGet }));
-const mockArrayLikeKeys = jest.fn((array) => Object.keys(array));
-jest.mock('../src/.internal/arrayLikeKeys.js', () => ({ __esModule: true, default: mockArrayLikeKeys }));
-
-
-// --- CONSOLIDATED TEST SUITE ---
 describe('Full Library Test Suite (43 Files)', () => {
     
     // --- MATH & NUMBER ---
