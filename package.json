@@ -12,20 +12,12 @@
   "license": "ISC",
   "devDependencies": {
     "coveralls": "^3.1.1",
-    "jest": "^29.7.0"
+    "jest": "^29.7.0",
+    "babel-jest": "^29.7.0",        
+    "@babel/core": "^7.23.6",       
+    "@babel/preset-env": "^7.23.6"  
   },
   "jest": {
-    "moduleFileExtensions": [
-      "js"
-    ],
-    "testEnvironment": "node",
-    "transformIgnorePatterns": [
-      "/node_modules/",
-      "/.internal/"
-    ],
-    "coveragePathIgnorePatterns": [
-      "/node_modules/",
-      "/.internal/"
-    ]
+    "testEnvironment": "node"
   }
 }
