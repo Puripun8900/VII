@@ -19,15 +19,12 @@ jobs:
       uses: actions/setup-node@v4
       with:
         node-version: '20' 
-        # Removed 'cache: npm' as per the previous fix.
 
     - name: Install Dependencies
       run: npm install
 
     - name: Run Unit Tests and Generate Coverage Report
-      # 🔑 FIX: Adding NODE_OPTIONS environment variable to force Jest to use ESM (modules)
-      env:
-        NODE_OPTIONS: "--experimental-vm-modules"
+      # 🔑 FIX: Removed the conflicting 'NODE_OPTIONS' environment variable.
       run: npm test
       
     - name: Upload Coverage to Coveralls
