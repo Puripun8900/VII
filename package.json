@@ -26,6 +26,9 @@
     "coveragePathIgnorePatterns": [
       "/node_modules/",
       "/.internal/"
+    ],
+    "testMatch": [
+      "**/test/**/*.cjs"
     ]
   }
 }
