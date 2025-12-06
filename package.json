@@ -1,14 +1,31 @@
 {
-  "name": "software-testing-assignment",
+  "name": "software-testing-project",
   "version": "1.0.0",
-  "description": "",
+  "description": "DevOps Engineering Exercise VIII",
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "test": "echo \"Error: no tests are implemented yet \" && exit 1"
+    "test": "jest --coverage",
+    "test:coverage": "jest --coverage --coverageReporters=text-lcov | coveralls"
   },
+  "keywords": [],
   "author": "",
-  "license": "MIT",
-  "dependencies": {},
-  "devDependencies": {}
+  "license": "ISC",
+  "devDependencies": {
+    "coveralls": "^3.1.1",
+    "jest": "^29.7.0"
+  },
+  "jest": {
+    "moduleFileExtensions": [
+      "js"
+    ],
+    "testEnvironment": "node",
+    "transformIgnorePatterns": [
+      "/.internal/"
+    ],
+    "coveragePathIgnorePatterns": [
+      "/node_modules/",
+      "/.internal/"
+    ]
+  }
 }
