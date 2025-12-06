@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "description": "DevOps Engineering Exercise VIII",
   "main": "index.js",
-  "type": "module",
   "scripts": {
     "test": "jest --coverage",
     "test:coverage": "jest --coverage --coverageReporters=text-lcov | coveralls"
@@ -21,15 +20,12 @@
     ],
     "testEnvironment": "node",
     "transformIgnorePatterns": [
+      "/node_modules/",
       "/.internal/"
     ],
     "coveragePathIgnorePatterns": [
       "/node_modules/",
       "/.internal/"
-    ],
-    "testMatch": [
-      "**/*.cjs",
-      "**/*.js"
     ]
   }
 }
