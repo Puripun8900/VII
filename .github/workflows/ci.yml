@@ -1,7 +1,6 @@
 # .github/workflows/ci.yml
 name: CI/CD Pipeline and Coverage
 
-# Triggers the workflow on pushes and pull requests to the 'main' branch
 on:
   push:
     branches: [ "main" ]
@@ -20,14 +19,15 @@ jobs:
       uses: actions/setup-node@v4
       with:
         node-version: '20' 
-        # ❌ FIX: REMOVE this line to prevent the 'Dependencies lock file is not found' error.
-        # cache: 'npm'
+        # Removed 'cache: npm' as per the previous fix.
 
     - name: Install Dependencies
-      # This will install everything without relying on a lock file cache.
       run: npm install
 
     - name: Run Unit Tests and Generate Coverage Report
+      # 🔑 FIX: Adding NODE_OPTIONS environment variable to force Jest to use ESM (modules)
+      env:
+        NODE_OPTIONS: "--experimental-vm-modules"
       run: npm test
       
     - name: Upload Coverage to Coveralls
