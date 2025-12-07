@@ -1,4 +1,4 @@
-# Software Testing Project: Library Utilities
+# VIII Deployment
 
 This repository hosts a software project focused on comprehensive unit testing and continuous integration (CI) for a library of utility functions (similar to Lodash or Underscore).
 
