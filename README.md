@@ -4,7 +4,7 @@ This repository hosts a software project focused on comprehensive unit testing a
 
 The goal of this project was to establish a robust CI/CD pipeline using **GitHub Actions** and measure code coverage using **Jest** and **Coveralls**.
 
-## 🚀 Status and Coverage
+## Status and Coverage
 
 Our pipeline is currently stable and running successfully on every push.
 
@@ -17,7 +17,7 @@ Our pipeline is currently stable and running successfully on every push.
 
 ***
 
-## 🛠 Project Structure
+## Project Structure
 
 The library functions are located in the `src/` directory, and all unit tests are contained within `test/all.test.js`.
 
@@ -25,7 +25,7 @@ The library functions are located in the `src/` directory, and all unit tests ar
 * **CI/CD:** GitHub Actions
 * **Coverage Reporting:** Coveralls
 
-## 📝 Important Note on the Test Suite
+## Important Note on the Test Suite
 
 To maintain a successful, green CI/CD pipeline, one test case has been temporarily **skipped** due to an unstable, documented bug in the source code.
 
@@ -41,7 +41,7 @@ To run the tests locally:
 
 1.  Clone the repository:
     ```bash
-    git clone [Your Repository URL]
+    git clone https://github.com/Puripun8900/VII.git
     ```
 2.  Install dependencies:
     ```bash
